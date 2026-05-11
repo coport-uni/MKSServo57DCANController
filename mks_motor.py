@@ -24,7 +24,7 @@ class MKSMotor:
     # --- Constants ---
 
     # Mechanical / motor limits
-    _mm_per_turn = 2.5
+    _mm_per_turn = 10
     _encoder_per_turn = 16384
     _max_speed_rpm = 3000
     _max_accel = 255
@@ -247,11 +247,11 @@ class MKSMotor:
         self.dev.write(bytes(packet))
         if not silent:
             data_hex = bytes(data_bytes).hex().upper() or "(no data)"
-            print(f"[TX] 0x{cmd:02X} {data_hex}")
+            print(f"[M{self.can_id:02X}][TX] 0x{cmd:02X} {data_hex}")
 
         if self.can_id == 0x00:
             if not silent:
-                print("[TX] Broadcast -- no response expected")
+                print(f"[M{self.can_id:02X}][TX] Broadcast -- no response expected")
             return None
 
         resp = b""
@@ -274,7 +274,7 @@ class MKSMotor:
             else:
                 table = self._setting_status
             status_label = table.get(status, f"Unknown 0x{status:02X}")
-            print(f"[RX] {status_label}")
+            print(f"[M{self.can_id:02X}][RX] {status_label}")
         return status
 
     def _wait(self):
@@ -300,13 +300,13 @@ class MKSMotor:
             if len(resp) == 18:
                 status = resp[9]
                 label = self._motion_status.get(status, f"0x{status:02X}")
-                print(f"[RX] {label}")
+                print(f"[M{self.can_id:02X}][RX] {label}")
 
                 if status == 0x01:
                     deadline = time.time() + self._max_wait_sec
                     continue
                 if status == 0x03:
-                    print("[LIMIT] Motor stopped by limit switch")
+                    print(f"[M{self.can_id:02X}][LIMIT] Motor stopped by limit switch")
                     time.sleep(self._limit_recover_delay_s)
                     self.dev.purge(1)
                     coord = int(
@@ -326,7 +326,7 @@ class MKSMotor:
 
             time.sleep(0.1)
 
-        print("[ERROR] Motor not responding -- check power, wiring, and CAN")
+        print(f"[M{self.can_id:02X}][ERROR] Motor not responding -- check power, wiring, and CAN")
         return None
 
     # --- Setup & Homing ---

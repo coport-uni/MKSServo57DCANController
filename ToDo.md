@@ -96,6 +96,18 @@ actual hardware spec (5 mm/turn ball screw).
 
 ---
 
+## Task: Label TX/RX log messages with motor CAN ID
+
+**Date**: 2026-05-11
+**Target**: `mks_motor.py`
+**Purpose**: When two motors run concurrently, distinguish which
+motor each log line belongs to by prefixing with the CAN ID.
+
+- [x] `_send`: `[TX]` / `[RX]` → `[M{can_id:02X}][TX]` / `[M{can_id:02X}][RX]`
+- [x] `_wait`: `[RX]` / `[LIMIT]` / `[ERROR]` 동일하게 수정
+
+---
+
 ### 5. Out of scope
 
 - No behavioral changes; only renames, constant extraction,
