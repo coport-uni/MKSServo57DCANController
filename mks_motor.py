@@ -13,6 +13,7 @@
 #   4. move_to           - High-level motion commands
 #   5. Motor control     - enable, disable, set_zero, read_status
 
+import threading
 import time
 
 import ftd2xx as ftdi
@@ -448,6 +449,28 @@ class MKSMotor:
             barrier.wait()
         for args in moves:
             self.move_to(*args)
+
+    @staticmethod
+    def run_sync(motors, moves):
+        """Run the same move sequence on multiple motors in sync.
+
+        All motors wait at a barrier before starting, so they
+        begin moving simultaneously regardless of thread scheduling.
+
+        Args:
+            motors: List of MKSMotor instances to move together.
+            moves: List of argument tuples passed to move_to()
+                in order.
+        """
+        barrier = threading.Barrier(len(motors))
+        threads = [
+            threading.Thread(target=m.run, args=(moves, barrier))
+            for m in motors
+        ]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
 
     # --- Manual command ---
 

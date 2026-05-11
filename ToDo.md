@@ -131,9 +131,18 @@ X축 1개 모터를 순차적으로 제어하는 시퀀스 구현.
 - Z 동기 이동은 `threading.Barrier(2)` + 헬퍼 함수로 반복 제거
 - 이동 파라미터(mm, speed_pct, accel_pct)는 파일 상단 상수로 정의
 
-- [ ] `running_test_xz.py` 작성
-- [ ] GitHub 이슈 등록
-- [ ] 커밋 & 푸시
+- [x] `running_test_xz.py` 작성
+
+## Task: Add MKSMotor.run_sync() and refactor test scripts
+
+**Date**: 2026-05-11
+**Target**: `mks_motor.py`, `running_test_z.py`, `running_test_xz.py`
+**Purpose**: 다중 모터 동기 이동 로직을 라이브러리로 이동해
+  테스트 스크립트의 boilerplate 제거.
+
+- [x] `mks_motor.py`: `import threading` 추가, `run_sync` staticmethod 추가
+- [x] `running_test_z.py`: `run_sync` 사용으로 교체
+- [x] `running_test_xz.py`: `run_z_sync` 헬퍼 제거, `run_sync` 사용
 
 ---
 

@@ -16,23 +16,6 @@ X_TARGET_MM = 100
 Z_TARGET_MM = 50
 
 
-def run_z_sync(motor_z_a, motor_z_b, mm):
-    """Move both Z motors to the same absolute position in sync."""
-    barrier = threading.Barrier(2)
-    t_a = threading.Thread(
-        target=motor_z_a.run,
-        args=(([(mm, SPEED_PCT, ACCEL_PCT)], barrier)),
-    )
-    t_b = threading.Thread(
-        target=motor_z_b.run,
-        args=(([(mm, SPEED_PCT, ACCEL_PCT)], barrier)),
-    )
-    t_a.start()
-    t_b.start()
-    t_a.join()
-    t_b.join()
-
-
 motor_z_a = MKSMotor.open(port=PORT_Z_A)
 motor_z_b = MKSMotor.open(port=PORT_Z_B)
 motor_x = MKSMotor.open(port=PORT_X)
@@ -55,13 +38,13 @@ try:
     motor_x.home()
 
     # Step 3: Z → Z_RISE_MM
-    run_z_sync(motor_z_a, motor_z_b, Z_RISE_MM)
+    MKSMotor.run_sync([motor_z_a, motor_z_b], [(Z_RISE_MM, SPEED_PCT, ACCEL_PCT)])
 
     # Step 4: X → X_TARGET_MM
     motor_x.move_to(X_TARGET_MM, SPEED_PCT, ACCEL_PCT)
 
     # Step 5: Z → Z_TARGET_MM
-    run_z_sync(motor_z_a, motor_z_b, Z_TARGET_MM)
+    MKSMotor.run_sync([motor_z_a, motor_z_b], [(Z_TARGET_MM, SPEED_PCT, ACCEL_PCT)])
 
 finally:
     motor_z_a.close()
