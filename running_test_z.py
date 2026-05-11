@@ -1,5 +1,6 @@
 from mks_motor import MKSMotor
 import threading
+import time
 
 # Two motors on separate USB2CAN adapters (port 0 and 1).
 # Hardware-level CAN sync (0x4B broadcast) requires a shared
@@ -22,8 +23,9 @@ t_init_b.join()
 # after each has finished homing.
 barrier = threading.Barrier(2)
 
-thread_a = threading.Thread(target=motor_a.run, args=([(50, 10, 0)], barrier))
-thread_b = threading.Thread(target=motor_b.run, args=([(50, 10, 0)], barrier))
+
+thread_a = threading.Thread(target=motor_a.run, args=([(100, 25, 10)], barrier))
+thread_b = threading.Thread(target=motor_b.run, args=([(100, 25, 10)], barrier))
 
 try:
     thread_a.start()
