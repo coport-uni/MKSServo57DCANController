@@ -11,9 +11,10 @@ SPEED_PCT = 25
 ACCEL_PCT = 10
 
 # --- Cycle positions (absolute, mm) ---
-Z_RISE_MM = 200
-X_TARGET_MM = 100
-Z_TARGET_MM = 50
+Z_ASCEND_MM = 200
+Z_DESCEND_MM = 50
+
+X_TARGET_MM_1 = 100
 
 
 motor_z_a = MKSMotor.open(port=PORT_Z_A)
@@ -38,13 +39,13 @@ try:
     motor_x.home()
 
     # Step 3: Z → Z_RISE_MM
-    MKSMotor.move_sync([motor_z_a, motor_z_b], [(Z_RISE_MM, SPEED_PCT, ACCEL_PCT)])
+    MKSMotor.move_sync([motor_z_a, motor_z_b], [(Z_ASCEND_MM, SPEED_PCT, ACCEL_PCT)])
 
     # Step 4: X → X_TARGET_MM
-    motor_x.move_to(X_TARGET_MM, SPEED_PCT, ACCEL_PCT)
+    motor_x.move_to(X_TARGET_MM_1, SPEED_PCT, ACCEL_PCT)
 
     # Step 5: Z → Z_TARGET_MM
-    MKSMotor.move_sync([motor_z_a, motor_z_b], [(Z_TARGET_MM, SPEED_PCT, ACCEL_PCT)])
+    MKSMotor.move_sync([motor_z_a, motor_z_b], [(Z_DESCEND_MM, SPEED_PCT, ACCEL_PCT)])
 
 finally:
     motor_z_a.close()
