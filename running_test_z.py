@@ -18,7 +18,7 @@ t_init_a.join()
 t_init_b.join()
 
 try:
-    MKSMotor.run_sync([motor_a, motor_b], [(50, 25, 10)])
+    MKSMotor.move_sync([motor_a, motor_b], [(50, 25, 10)])
 finally:
     motor_a.close()
     motor_b.close()
