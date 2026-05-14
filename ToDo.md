@@ -355,3 +355,25 @@ Tracked under issue #21.
 - [x] GitHub issue register (#21)
 - [ ] Commit and push
 - [ ] GitHub issue update
+
+---
+
+## Fork repo and sync CommonClaude conventions
+
+### Background
+User directed forking `kkhyunhho/MKSServo57DCANController` to their own
+account (`coport-uni`) and reflecting `coport-uni/CommonClaude` contents
+into the repo. Apply mode: overwrite-on-conflict (full reflection).
+Tracked under issue #1 on the fork.
+
+### Work items
+- [x] Fork `kkhyunhho/MKSServo57DCANController` -> `coport-uni/MKSServo57DCANController`
+- [x] Re-point local `origin` to fork; keep `upstream` -> kkhyunhho original
+- [x] Copy CommonClaude root files (`CLAUDE.md`, `CLAUDECowork.md`,
+      `Concept.md`, `LearnedPatterns.md`, `README.md`, `ToDo.md`,
+      `ruff.toml`) and `.claude/` (5 hooks + `settings.json`)
+- [x] Remove stale `CommonClaude.md` superseded by new `CLAUDE.md`
+- [x] Commit and push (c047ab5, e8112ba)
+- [x] Enable issues on fork (was disabled by default)
+- [x] GitHub issue register (#1)
+- [ ] GitHub issue update
