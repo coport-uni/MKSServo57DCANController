@@ -432,9 +432,10 @@ forward-link in README so future readers know who consumes
 this library.
 
 ### Work items
-- [ ] `git rm CLAUDECowork.md Concept.md`
-- [ ] Add a one-line "Used by" forward-link to README.md
-      pointing to the planned LabCoordinator repo
-- [ ] GitHub issue register on coport-uni fork
-- [ ] Commit and push
-- [ ] GitHub issue update (close)
+- [x] `git rm CLAUDECowork.md Concept.md`
+- [x] Add a "Used by" forward-link to README.md pointing to
+      LabCoordinator; also dropped stale References links to
+      the retired `CommonClaude.md` and `CLAUDECowork.md`
+- [x] GitHub issue register on coport-uni fork (#3)
+- [x] Commit and push (c47dfec)
+- [x] GitHub issue update (close)
