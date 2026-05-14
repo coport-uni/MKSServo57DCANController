@@ -1,95 +1,148 @@
-# MKS Motor Control
+# CommonClaude
 
-Python driver for the **MKS SERVO57D** CAN stepper motor,
-controlled via a USB2CAN-FIFO (FTDI FT245) adapter.
+**Project-wide conventions for all Claude Code sessions**
 
-This module is part of a larger PipetteStation project.
-Eventually it will be wrapped in a GUI executable for full
-station control, but for now it focuses on motor control
-only.
+This repository defines the rules and workflows that every [Claude Code](https://claude.ai/code) session must follow. The core document is [`CommonClaude.md`](CommonClaude.md).
 
-## Hardware
+---
 
-| Item | Detail |
-|------|--------|
-| Motor | MKS SERVO57D (CAN stepper) |
-| Adapter | USB2CAN-FIFO (FTDI FT245) |
-| Mechanics | Ball screw, 10 mm/turn |
-| Travel | 0 - 450 mm |
+## Environment
 
-## Installation
+| Item       | Detail                                 |
+|------------|----------------------------------------|
+| Runtime    | Docker container (`--privileged`)      |
+| OS         | Ubuntu 24.04 (Noble)                   |
+| Dev tool   | Claude Code (CLI / VS Code extension)  |
 
-```bash
-pip install ftd2xx
-```
+---
 
-The FTDI **D2XX** driver must also be installed on the
-system. On Windows, this usually comes with the FTDI
-adapter drivers.
+## Convention Summary
 
-## Usage
+### 1. MIT Code Convention
 
-### Quick run
+Follows the [MIT CommLab Coding and Comment Style](https://mitcommlab.mit.edu/broad/commkit/coding-and-comment-style/).
 
-See the `if __name__ == "__main__":` block at the
-bottom of [mks_motor.py](mks_motor.py).
+| Element  | Style        | Example            |
+|----------|--------------|--------------------|
+| Variable | `lower_case` | `joint_angle`      |
+| Function | `lower_case` | `send_action`      |
+| Class    | `CamelCase`  | `FairinoFollower`  |
+| Constant | `lower_case` | `_settle_mid_s`    |
+| Module   | `lowercase`  | `fairino_follower`  |
 
-### Direct control
+- 80-column limit, 4-space indentation
+- Google-style docstrings required (`Args:`, `Returns:`, `Raises:`)
+- All comments, docstrings, and documentation must be in **English**
+- TODO format: `# TODO: (@owner) description`
 
-```python
-from mks_motor import MKSMotor
+### 2. Debug File Management
 
-motor = MKSMotor.open(port=0, can_id=0x01)
-motor.setup()
-motor.home()
+| Location        | Purpose                                     |
+|-----------------|---------------------------------------------|
+| `tests/`        | Production-quality tests for CI/CD          |
+| `claude_test/`  | Debug scripts, one-off experiments          |
 
-motor.move_to(100, speed_pct=50)
-motor.move_to(200)
-motor.move_to(0)
+### 3. Task Management
 
-motor.close()
-```
+Every task follows this workflow:
 
-### Multiple motors
+1. **Validate input** — Check if the command is explicit and if reference materials exist
+2. **Write ToDo.md** — Organize the task list
+3. **User confirmation** — Get approval on ToDo.md contents
+4. **Create GitHub issue** — Register via `gh issue create`
+5. **Execute** — Check off completed items in ToDo.md
+6. **Update issue** — Sync progress via `gh issue edit`
 
-See [running_test.py](running_test.py) for an example
-of controlling two motors at the same time using
-threads.
+### 4. Testing Rules
 
-## Public API
+- **No magic numbers** — Use meaningful constants instead of unexplained values
+- **No hardcoding** — Never write code that only passes specific test inputs
+- **Code quality first** — Prioritize readability, maintainability, and correctness over passing tests
 
-All methods belong to the `MKSMotor` class.
-`open()` and `main()` are class methods, called as
-`MKSMotor.open(...)`. The rest are instance methods,
-called on a motor object (e.g. `motor.setup()`).
+### 5. Using `ultrathink`
 
-| Method | Description |
-|--------|-------------|
-| `open(port, can_id)` | Open FTDI device and return a motor instance |
-| `main(mm, ...)` | One-shot: open, setup, home, move, close |
-| `setup()` | Apply default motor settings |
-| `home(speed_rpm)` | Run homing sequence and enable limit switches |
-| `move_to(mm, speed_pct, accel_pct)` | Move to absolute position in mm |
-| `move_sync(motors, moves, barrier)` | Move multiple motors in sync |
-| `enable()` | Energize motor coils |
-| `disable()` | De-energize motor coils |
-| `set_zero()` | Set current position as the zero point |
-| `read_status()` | Read motor status |
-| `manual_send(cmd, *data)` | Send a raw CAN command |
-| `close()` | Close the FTDI device |
-
-## File structure
+When in **plan mode** or tackling **complex tasks**, append `ultrathink` to the end of your command. This signals Claude to use extended reasoning for deeper analysis.
 
 ```
-mks_motor/
-├── mks_motor.py       # MKSMotor class (library)
-├── running_test.py    # Test script for dual motors
-├── CommonClaude.md    # Project conventions
-└── README.md          # This file
+# Example
+Review this entire codebase ultrathink
 ```
 
-## Roadmap
+---
 
-- [x] Single motor control
-- [x] Dual motor control
-- [ ] GUI executable for the full PipetteStation
+## Automated Enforcement (Hooks)
+
+This repository uses [Claude Code hooks](https://code.claude.com/docs/en/hooks) to automatically enforce the conventions above. Hooks run on every tool call matching their event and either block the action or feed errors back to Claude for self-correction.
+
+| Hook Script | Event | Rule Enforced | Behavior |
+|---|---|---|---|
+| [`pre-write-guard.sh`](.claude/hooks/pre-write-guard.sh) | PreToolUse (Write/Edit) | §2 Debug File Management | **Blocks** writing `debug_*`, `scratch_*`, `tmp_*`, `experiment_*` files into `tests/` |
+| [`post-write-lint.sh`](.claude/hooks/post-write-lint.sh) | PostToolUse (Write/Edit) | §5 Linting | Runs `ruff check` + `ruff format --check` on every Python file write; **feeds errors back** to Claude |
+| [`post-write-debug-remind.sh`](.claude/hooks/post-write-debug-remind.sh) | PostToolUse (Write/Edit) | §2 Debug File Management | Reminds to update `claude_test/README.md` when adding files to `claude_test/` |
+| Stop prompt hook | Stop | §3 Task Management | Verifies that `ToDo.md` has an entry and a GitHub issue exists before Claude finishes |
+
+Configuration lives in [`.claude/settings.json`](.claude/settings.json), and the linter is configured by [`ruff.toml`](ruff.toml) (80-column, 4-space, rules `E/F/W/I/N`).
+
+**Not enforced via hooks** (kept in `CLAUDE.md` as instructions): comment quality, English-only rule, magic-number/hardcoding rules, and command input validation — these require human judgment.
+
+---
+
+## Claude Code IDE Commands
+
+| Command            | Description                                         |
+|--------------------|-----------------------------------------------------|
+| `/clear`           | Clears Claude's memory context.                     |
+| `/rewind`            | Re-executes the previous action.                  |
+| `/memory`          | Adds specific content to memory.                    |
+| `/permission`      | Configures permissions for Bash, Edit, Write, etc.  |
+| `/review`          | Checks the current session's context cost.          |
+| `/output-style`    | Switches the output style (Default, Explanatory, Learning) or applies a custom style. |
+
+---
+
+## Claude Code Shortcuts (VS Code)
+
+| Shortcut                     | Description                                      |
+|------------------------------|--------------------------------------------------|
+| `Shift` + `Tab`              | Toggles approval mode.                           |
+| `Ctrl` + `Shift` + `E`       | Opens the Explorer panel.                        |
+| `Ctrl` + `Shift` + `X`       | Opens the Extensions panel.                      |
+| `Alt` + `K`                  | Starts an inline editor reference.               |
+
+
+---
+
+## Cowork Session Rules (`CLAUDECowork.md`)
+
+[`CLAUDECowork.md`](CLAUDECowork.md) defines rules specific to the Cowork workspace session.
+
+### Expense Report Preparation
+
+Rules for writing research expense reports under `서류 작업/`:
+- Extract item names, quantities, amounts, and dates from transaction statements, quotes, and card receipts (PDF)
+- Fields to update: date, amount (formatted as `"315,000 원"`), usage details (`"{item} 외 {count}건"`)
+- Protected fields (names, budget codes, affiliations) must not be changed
+- Verify against source PDFs after completion, then back up to the designated archive path
+
+### ToDo Workflow
+
+- Write a new entry in `ToDo.md` **before** starting any task (append only, never delete)
+- Get user approval before executing
+- Check off items as they are completed; keep all history intact
+
+### Mail Reply Rules
+
+- Use `DocumentMailReply.md` as the reply template
+- Replace the `{friendly name}` placeholder with the sender's first name
+- Always show the draft to the user and get approval **before** sending
+
+---
+
+## References
+
+- Full rules: [`CommonClaude.md`](CommonClaude.md)
+- Cowork rules: [`CLAUDECowork.md`](CLAUDECowork.md)
+- Debug file index: [`claude_test/README.md`](claude_test/README.md)
+- [ClaudeCode for vscode](https://code.claude.com/docs/en/vs-code#extension-settings)
+- [클로드 코드를 활용한 바이브 코딩 완벽입문](https://product.kyobobook.co.kr/detail/S000219349783)
+- [한 걸음 앞선 개발자가 지금 꼭 알아야할 클로드 코드](https://product.kyobobook.co.kr/detail/S000217402731)  
