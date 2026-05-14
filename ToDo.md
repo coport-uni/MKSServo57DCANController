@@ -402,5 +402,5 @@ ToDo/issue entries existed; Stop hook surfaced the omission.
 - [x] Append this ToDo entry (post-hoc recovery)
 - [x] GitHub issue register (coport-uni#2; misfiled
       kkhyunhho#4 closed)
-- [ ] Commit and push
-- [ ] GitHub issue update
+- [x] Commit and push (a80f29d)
+- [x] GitHub issue update (#2 closed)
