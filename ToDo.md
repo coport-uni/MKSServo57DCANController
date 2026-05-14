@@ -376,4 +376,4 @@ Tracked under issue #1 on the fork.
 - [x] Commit and push (c047ab5, e8112ba)
 - [x] Enable issues on fork (was disabled by default)
 - [x] GitHub issue register (#1)
-- [ ] GitHub issue update
+- [x] GitHub issue update (#1 closed by fa989bd)
