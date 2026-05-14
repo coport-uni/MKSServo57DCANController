@@ -404,3 +404,37 @@ ToDo/issue entries existed; Stop hook surfaced the omission.
       kkhyunhho#4 closed)
 - [x] Commit and push (a80f29d)
 - [x] GitHub issue update (#2 closed)
+
+---
+
+## Repo cleanup and coordinator-architecture decision
+
+### Background
+Two follow-ups bundled under one task per user direction
+2026-05-14:
+
+1. User deleted `CLAUDECowork.md` and `Concept.md` from the
+   working tree during the prior session and asked that the
+   cleanup land here rather than as a standalone task. Cowork
+   rules and the ECC-import concept doc were both retired as
+   no-longer-needed reference material.
+2. User decided to create a new downstream repo
+   `coport-uni/LabCoordinator` that consumes this repo, plus
+   `coport-uni/LinearMotorController`, a future syringe-pump
+   library, and `coport-uni/ESP32S3WebMonitor` (read-only HTTP
+   polling) as git submodules under `vendor/`. This MKS repo
+   stays a self-contained hardware library. Architecture is
+   captured in plan file `validated-moseying-lark.md`. Phase B
+   (coordinator bootstrap) is a separate task in the new repo.
+
+This entry covers Phase A only: the MKS-side cleanup and a
+forward-link in README so future readers know who consumes
+this library.
+
+### Work items
+- [ ] `git rm CLAUDECowork.md Concept.md`
+- [ ] Add a one-line "Used by" forward-link to README.md
+      pointing to the planned LabCoordinator repo
+- [ ] GitHub issue register on coport-uni fork
+- [ ] Commit and push
+- [ ] GitHub issue update (close)

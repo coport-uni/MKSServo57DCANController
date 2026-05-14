@@ -112,37 +112,18 @@ Configuration lives in [`.claude/settings.json`](.claude/settings.json), and the
 
 ---
 
-## Cowork Session Rules (`CLAUDECowork.md`)
+## Used By
 
-[`CLAUDECowork.md`](CLAUDECowork.md) defines rules specific to the Cowork workspace session.
-
-### Expense Report Preparation
-
-Rules for writing research expense reports under `서류 작업/`:
-- Extract item names, quantities, amounts, and dates from transaction statements, quotes, and card receipts (PDF)
-- Fields to update: date, amount (formatted as `"315,000 원"`), usage details (`"{item} 외 {count}건"`)
-- Protected fields (names, budget codes, affiliations) must not be changed
-- Verify against source PDFs after completion, then back up to the designated archive path
-
-### ToDo Workflow
-
-- Write a new entry in `ToDo.md` **before** starting any task (append only, never delete)
-- Get user approval before executing
-- Check off items as they are completed; keep all history intact
-
-### Mail Reply Rules
-
-- Use `DocumentMailReply.md` as the reply template
-- Replace the `{friendly name}` placeholder with the sender's first name
-- Always show the draft to the user and get approval **before** sending
+This repository is a self-contained hardware library. It is consumed as a git submodule by the upstream lab coordinator repo `coport-uni/LabCoordinator`, which orchestrates this motor library together with `coport-uni/LinearMotorController`, a syringe-pump library, and read-only status from `coport-uni/ESP32S3WebMonitor`.
 
 ---
 
 ## References
 
-- Full rules: [`CommonClaude.md`](CommonClaude.md)
-- Cowork rules: [`CLAUDECowork.md`](CLAUDECowork.md)
+- Full rules: [`CLAUDE.md`](CLAUDE.md)
+- Learned patterns: [`LearnedPatterns.md`](LearnedPatterns.md)
 - Debug file index: [`claude_test/README.md`](claude_test/README.md)
 - [ClaudeCode for vscode](https://code.claude.com/docs/en/vs-code#extension-settings)
 - [클로드 코드를 활용한 바이브 코딩 완벽입문](https://product.kyobobook.co.kr/detail/S000219349783)
-- [한 걸음 앞선 개발자가 지금 꼭 알아야할 클로드 코드](https://product.kyobobook.co.kr/detail/S000217402731)  
+- [한 걸음 앞선 개발자가 지금 꼭 알아야할 클로드 코드](https://product.kyobobook.co.kr/detail/S000217402731)
+
