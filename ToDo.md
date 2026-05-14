@@ -377,3 +377,30 @@ Tracked under issue #1 on the fork.
 - [x] Enable issues on fork (was disabled by default)
 - [x] GitHub issue register (#1)
 - [x] GitHub issue update (#1 closed by fa989bd)
+
+---
+
+## Repository overview briefing
+
+### Background
+User asked `먼저 현재 레포에 대해 설명해줘` to obtain an overview
+of the repository as the first step of a new session. The
+deliverable is a structured explanation of the repo's dual
+identity (MKS SERVO57D CAN controller code + CommonClaude
+conventions host), key files, governance assets, hook-based
+enforcement, and the §4 workflow. No code change is involved;
+this is a read-only briefing task. Logged post-hoc per §4
+Task Management because the response was produced before the
+ToDo/issue entries existed; Stop hook surfaced the omission.
+
+### Work items
+- [x] Read CLAUDE.md, README.md, Concept.md, ToDo.md,
+      mks_motor.py, running_test_xz.py to ground the summary
+- [x] Deliver structured overview covering: identity, core
+      files, governance files, operating mechanism, and open
+      ToDo items
+- [x] Append this ToDo entry (post-hoc recovery)
+- [x] GitHub issue register (coport-uni#2; misfiled
+      kkhyunhho#4 closed)
+- [ ] Commit and push
+- [ ] GitHub issue update
